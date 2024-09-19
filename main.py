@@ -80,6 +80,21 @@ async def hello(interaction: discord.Interaction, user: discord.Member = None):
 
 ###
 
+@client.tree.command(name="emergency_shutdown")
+async def emergency_shutdown(interaction: discord.Interaction):
+    """Emergency shutdown command for mods/admins."""
+    
+    # Replace with your user ID or a list of authorized user IDs [no]
+    # authorized_users = [YOUR_USER_ID, ANOTHER_MOD_USER_ID]
+    
+    #if interaction.user.id in authorized_users:
+    await interaction.response.send_message(f"Shutting down the bot, {interaction.user.name}.")
+    await client.close()  # Properly close the bot instance
+    exit(0)  # Exit the program
+    #else:
+    #    await interaction.response.send_message("You are not authorized to use this command!", ephemeral=True)
+
+
 @client.tree.command(name="source")
 async def source(interaction: discord.Interaction):
     """Provides the link to the source code of Kitsune Bob"""
