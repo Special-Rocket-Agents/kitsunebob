@@ -79,6 +79,15 @@ async def hello(interaction: discord.Interaction, user: discord.Member = None):
         )
 
 ###
+
+@client.tree.command(name="source")
+async def source(interaction: discord.Interaction):
+    """Provides the link to the source code of Kitsune Bob"""
+    source_code_link = "https://github.com/Special-Rocket-Agents/kitsunebob"  # Replace this with the actual URL
+    await interaction.response.send_message(f"Here's the source code of Kitsune Bob: {source_code_link}")
+
+
+
 @client.tree.command()
 @app_commands.rename(url='url')
 @app_commands.describe(url='the site to check. (MAKE SURE HTTPS:// IS ON!))')
