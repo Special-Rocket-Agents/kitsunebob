@@ -16,7 +16,7 @@ from colorama import Fore, Back, Style
 # All of them has been named PLACEHOLDER for you to notice.
 # MY_GUILD: Your server's ID, NOT YOUR CHANNEL IDs! Your server ID.
 # token = Your bot's token. It is, by default, set to fetch a system env variable "DISCORD_TOKEN"
-# 
+# TODO: oh yeah JSONS!!!!!
 MY_GUILD = discord.Object(id=1018825423481737256)  # replace with your guild id
 token = os.environ["DISCORD_TOKEN"] # PLACEHOLDER
 
