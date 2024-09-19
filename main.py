@@ -57,7 +57,11 @@ client = MyClient(intents=intents)
 async def on_ready():
   print(f'Logged in as {client.user} (ID: {client.user.id})')
   print('------')
-
+    # Set the bot's presence to 'Listening to the numbers'
+  activity = discord.Activity(type=discord.ActivityType.listening, name="the numbers")
+    
+    # Update the bot's status
+  await client.change_presence(activity=activity)
 
 @client.tree.command(name="hello")
 @app_commands.describe(user="The user to greet (optional)")
