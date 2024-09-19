@@ -1,24 +1,27 @@
 from typing import Optional
-from keep_alive import keep_alive
 import discord
 import os
 from discord import app_commands
 from discord.ext import commands
 import random
 import requests
-from bs4 import BeautifulSoup
 import json
 from colorama import init
 from colorama import Fore, Back, Style
+
+with open('config.json', 'r') as config_file:
+    config = json.load(config_file)
+
+# Access the values
+TOKEN = config['token']
+GUILD_ID = config['guild_id']
+LOG_ID = config['log_id']
+
 ################################################################################################
 # WELCOME TO KITSUNE BOB/BOT!
-# This bot is not tailored to be run globally. So there are some placeholders you need to create.
-# All of them has been named PLACEHOLDER for you to notice.
-# MY_GUILD: Your server's ID, NOT YOUR CHANNEL IDs! Your server ID.
-# token = Your bot's token. It is, by default, set to fetch a system env variable "DISCORD_TOKEN"
-# TODO: oh yeah JSONS!!!!!
-MY_GUILD = discord.Object(id=1018825423481737256)  # replace with your guild id
-token = os.environ["DISCORD_TOKEN"] # PLACEHOLDER
+# This bot is not tailored to be run globally. So there are some things you need to do
+MY_GUILD = discord.Object(id=GUILD_ID)  # replace with your guild id
+token = TOKEN # PLACEHOLDER
 
 init()
 
@@ -56,15 +59,24 @@ async def on_ready():
   print('------')
 
 
-@client.tree.command()
-async def hello(interaction: discord.Interaction):
-  """Says hello!"""
-  await interaction.response.send_message(
-    random.choice([
-      f"Hey {interaction.user.name}! You look like hammered shit!",
-      f"Hi {interaction.user.mention}!", f"greetings {interaction.user.name}"
-    ]))
-
+@client.tree.command(name="hello")
+@app_commands.describe(user="The user to greet (optional)")
+async def hello(interaction: discord.Interaction, user: discord.Member = None):
+    """Says hello!"""
+    if user is None:  # No user specified, greet the member who used the command
+        await interaction.response.send_message(
+            random.choice([
+                f"Hey {interaction.user.name}! You look like hammered shit!",
+                f"Hi {interaction.user.mention}!", f"greetings {interaction.user.name}"
+            ])
+        )
+    else:  # Greet the specified user
+        await interaction.response.send_message(
+            random.choice([
+                f"Hey {user.name}! You look like hammered shit!",
+                f"Hi {user.mention}!", f"greetings {user.name}"
+            ])
+        )
 
 ###
 @client.tree.command()
@@ -79,104 +91,6 @@ async def site_check(interaction: discord.Interaction, url: str):
     await interaction.response.send_message(url + " is not an okay " +
                                             shit.status_code)
 
-
-@client.tree.command()
-@app_commands.rename(url='url')
-@app_commands.describe(url='the site to parse. (MAKE SURE HTTPS:// IS ON!))')
-async def site_parse(interaction: discord.Interaction, url: str):
-  """Makes a GET request to the URL and returns content in PLAINTEXT"""
-  
-  response = requests.get(url)
-
-  if response.status_code == 200:
-    soup = BeautifulSoup(response.content, 'html.parser')
-    # Extract all the text from the HTML content
-    text = soup.get_text()
-    # Remove any extra whitespace or line breaks
-    # text = ' '.join(text.split())
-    await interaction.response.send_message("```" + text + "```", ephemeral=True)
-  elif response.status_code == 400:
-    await interaction.response.send_message(f' Server is mad consfused bro what is this? ({response.status_code}).')
-    
-  elif response.status_code == 401:
-    await interaction.response.send_message(f'can\'t do authorization bro ({response.status_code}).')
-  elif response.status_code == 402:
-    await interaction.response.send_message(f'payment bruh? ({response.status_code}).')
-  elif response.status_code == 403:
-    await interaction.response.send_message(f'forbidden, banned, lost ({response.status_code}).')
-  elif response.status_code == 404:
-    await interaction.response.send_message(f'no, its not here. ({response.status_code}).')
-  elif response.status_code == 405:
-    await interaction.response.send_message(f'Method Not Allowed? What is going on? ({response.status_code}).')
-  elif response.status_code == 406:
-    await interaction.response.send_message(f'Not acceptable, contact CONTENTNEGOTIATE for more info. ({response.status_code}).')
-  elif response.status_code == 407:
-    await interaction.response.send_message(f'Proxy Auth first! ({response.status_code}).')
-  elif response.status_code == 408:
-    await interaction.response.send_message(f'Timeout of a Request ({response.status_code}).')
-  elif response.status_code == 409:
-    await interaction.response.send_message(f'**CONFLICT IS GOING ON** ({response.status_code}).')
-  elif response.status_code == 410:
-    await interaction.response.send_message(f'Gone. Reduced to atoms. ({response.status_code}).')
-  elif response.status_code == 411:
-    await interaction.response.send_message(f'We need to know about the length of your 🍆 ({response.status_code}).')
-  elif response.status_code == 412:
-    await interaction.response.send_message(f'Precondition slipped on a 404 ({response.status_code}).')
-  elif response.status_code == 413:
-    await interaction.response.send_message(f'Payload is *huge* ({response.status_code}).')
-  elif response.status_code == 414:
-    await interaction.response.send_message(f'Your URI was too dramatic for the server. So it died ({response.status_code}).')
-  elif response.status_code == 415:
-    await interaction.response.send_message(f'Unsupported Media Type??? ({response.status_code}).')
-  elif response.status_code == 416:
-    await interaction.response.send_message(f'Requested Range is unsatisfactionable ({response.status_code}).')
-  elif response.status_code == 418:
-    await interaction.response.send_message(f'The server needs coffee...?!?!? ({response.status_code}).')
-  elif response.status_code == 421:
-    await interaction.response.send_message(f'Misdirected Request. ({response.status_code}).')
-  elif response.status_code == 422:
-    await interaction.response.send_message(f'Unproccessable Entity ({response.status_code}).')
-  elif response.status_code == 423:
-    await interaction.response.send_message(f'Locked away. ({response.status_code}).')
-  elif response.status_code == 424:
-    await interaction.response.send_message(f'Failed Dependency ({response.status_code}).')
-  elif response.status_code == 425:
-    await interaction.response.send_message(f'Chill out! Too early. ({response.status_code}).')
-  elif response.status_code == 426:
-    await interaction.response.send_message(f'I should switch my protocols... ({response.status_code}).')
-  elif response.status_code == 428:
-    await interaction.response.send_message(f'Precondition needed... ({response.status_code}).')
-  elif response.status_code == 429:
-    await interaction.response.send_message(f'you just got ratelimited. bitch! lolmao rofl ({response.status_code}).')
-  elif response.status_code == 431:
-    await interaction.response.send_message(f'Request Header is BIG ({response.status_code}).')
-  elif response.status_code == 451:
-    await interaction.response.send_message(f'Unavailable for legal reasons? ({response.status_code}).')
-    ##################### SERVER STATUS CODE NOW ######################################################
-  elif response.status_code == 500:
-    await interaction.response.send_message(f'Internal Generic Server Error. ({response.status_code}).')
-  elif response.status_code == 501:
-    await interaction.response.send_message(f'Not Implemented yet. ({response.status_code}).')
-  elif response.status_code == 502:
-    await interaction.response.send_message(f'Bad Getaway ({response.status_code}).')
-  elif response.status_code == 503:
-    await interaction.response.send_message(f'Service is Unavailable ({response.status_code}).')
-  elif response.status_code == 504:
-    await interaction.response.send_message(f'Getaway Timed out ({response.status_code}).')
-  elif response.status_code == 505:
-    await interaction.response.send_message(f'HTTP Version is not supported. ({response.status_code}).')
-  elif response.status_code == 506:
-    await interaction.response.send_message(f'Variant also wants to negotiate ({response.status_code}).')
-  elif response.status_code == 507:
-    await interaction.response.send_message(f'Not Enough Storage ({response.status_code}).')
-  elif response.status_code == 508:
-    await interaction.response.send_message(f'Loop Found ({response.status_code}).')
-  elif response.status_code == 510:
-    await interaction.response.send_message(f'you need to extend your uhh ({response.status_code}).')
-  elif response.status_code == 511:
-    await interaction.response.send_message(f'Network Authentication Required ({response.status_code}).')  
-  else:
-    await interaction.response.send_message(f'Unknown Error ({response.status_code}).')
 
 @client.tree.command()
 @app_commands.rename(username='username')
@@ -305,12 +219,12 @@ async def report_message(interaction: discord.Interaction,
                          message: discord.Message):
   # We're sending this response message with ephemeral=True, so only the command executor can see it
   await interaction.response.send_message(
-    f'Thanks for reporting this message by {message.author.mention} to our moderators.',
+    f'You rat. ~~Thanks for reporting this message by {message.author.mention}.~~',
     ephemeral=True)
 
   # Handle report by sending it into a log channel
   log_channel = interaction.guild.get_channel(
-    1051962379195396138)  # replace with your channel id
+    LOG_ID)  # replace with your channel id
 
   embed = discord.Embed(title='Reported Message - ' + interaction.user.name)
   if message.content:
@@ -359,5 +273,4 @@ async def on_message(message):
   return
 
 
-keep_alive()
 client.run(token)
