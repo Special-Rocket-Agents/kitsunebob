@@ -284,7 +284,7 @@ async def on_message(message):
     "Maybe give Certified Bruh Engineer some love?",
     "I'm best friends with every bot known", "ok and",
     "*numbers... the numbers...*", "I see", "w h a t", "Maybe", "Maybe not",
-    "Absolutelyn't", "Absolutely!", "The fuck?!", "shit.", "I don't care",
+    "Absolutelyn't", "Absolutely!", "The fuck?!", "shit.", "so did you know I have a banner now?", "I don't care",
     "I really don't care", "I really, REALLY don't care.", "shut up idc.",
     "Stop", "Begin", "i guess?", "sheeeesh", "bruh", "cool", "not really cool",
     "wtf is that delete that shit bro", "What's up", "How are you",
