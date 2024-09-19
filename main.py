@@ -123,24 +123,25 @@ async def site_check(interaction: discord.Interaction, url: str):
 @client.tree.command()
 @app_commands.rename(username='username')
 @app_commands.describe(
-  username=
-  'The username of the neocities site. like arezg.neocities.org, put the "arezg"'
+    username='The username of the neocities site. like arezg.neocities.org, put the "arezg"'
 )
 async def ncinfo(interaction: discord.Interaction, username: str):
-  """Gets info about a neocities site"""
-  fuck = requests.get("https://neocities.org/api/info?sitename=" + username)
-async def ncinfo(interaction: discord.Interaction, username: str):
-  """Gets info about a neocities site"""
-  fuck = requests.get("https://neocities.org/api/info?sitename=" + username)
-  f = json.loads(fuck.text)
-  await interaction.response.send_message(f"""
-Username: {f['sitename']}
-{f['views']} Views
-{f['hits']} Hits
-Created at: {f['created_at']}
-Last Updated: {f['last_updated']}
+    """Gets info about a Neocities site"""
+    response = requests.get(f"https://neocities.org/api/info?sitename={username}")
+    data = json.loads(response.text)
+    
+    # Check if the response was successful
+    if data['result'] == 'success':
+        info = data['info']
+        await interaction.response.send_message(f"""
+Username: {info['sitename']}
+{info['views']} Views
+{info['hits']} Hits
+Created at: {info['created_at']}
+Last Updated: {info['last_updated']}
 """)
-
+    else:
+        await interaction.response.send_message(f"Error: Could not fetch info for {username}.")
 
 @client.tree.command()
 async def info(interaction: discord.Interaction):
