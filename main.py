@@ -103,7 +103,7 @@ async def emergency_shutdown(interaction: discord.Interaction):
 async def source(interaction: discord.Interaction):
     """Provides the link to the source code of Kitsune Bob"""
     source_code_link = "https://github.com/Special-Rocket-Agents/kitsunebob"  # Replace this with the actual URL
-    await interaction.response.send_message(f"Here's the source code of Kitsune Bob: {source_code_link}")
+    await interaction.response.send_message(f"Here's the source code of Kitsune Bob: <{source_code_link}>")
 
 
 
